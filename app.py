@@ -5,8 +5,10 @@ import streamlit_authenticator as stauth
 import yaml
 from real_estate.finca_raiz import main, search
 from yaml import SafeLoader
+from shapely import wkt
 
 COLUMNS_TO_SHOW = [
+    "price",
     "area",
     "price_m2",
     "is_new",
@@ -64,6 +66,12 @@ if authentication_status:
 
     if len(property_types) == 1 and len(offers) == 1:
         df = sc.search(text_input, offer=offers, property_type=property_types)
+        df["geometry"] = df["locations.location_point"].apply(wkt.loads)
+        df["lat"] = df["geometry"].apply(lambda p: p.y)
+        df["lon"] = df["geometry"].apply(lambda p: p.x)
+        df["lat"] = df["lat"].where(df["lat"].between(4, 11), pd.NA)
+        df["lon"] = df["lon"].where(df["lon"].between(-76, -73), pd.NA)
+        
         df["price_m2"] = pd.to_numeric(df["price_m2"])
         min = df["price_m2"].quantile(0.05)
         max = df["price_m2"].quantile(0.95)
@@ -76,8 +84,12 @@ if authentication_status:
         st.write(f"_{len(df)} properties_")
         st.dataframe(df.filter(COLUMNS_TO_SHOW))
         
+        
+        st.write("### Locations")
+        st.map(data=df.dropna(subset=["lat", "lon"]), zoom=5)
+        
 
-        st.plotly_chart(px.histogram(df, x="price_m2", title="Price per m2"))
+        st.plotly_chart(px.histogram(df, x="price_m2", title="Price m<sup>2</sup>"))
         st.plotly_chart(px.histogram(df, x="rooms.name", title="Number of rooms"))
         st.plotly_chart(px.histogram(df, x="baths.name", title="Number of bathrooms"))
         
