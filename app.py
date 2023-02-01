@@ -37,7 +37,7 @@ authenticator = stauth.Authenticate(
 
 name, authentication_status, username = authenticator.login('Login', 'main')
 if authentication_status:
-    st.write("# Human Rela Estate - Colombia 🏠🇨🇴")
+    st.write("# Human Real Estate - Colombia 🏠🇨🇴")
 
     text_input = st.text_input("Search with a keyword", "La Estrella, Antioquia")
 
