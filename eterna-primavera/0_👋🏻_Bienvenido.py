@@ -1,3 +1,4 @@
+import language
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -19,11 +20,6 @@ COLUMNS_TO_SHOW = [
     "contact.phones",
 ]
 
-
-def format_option(option):
-    return option.replace("-", " ").title()
-
-
 st.set_page_config(
     page_title="Bienvenido a la Eterna Primavera",
     page_icon="👋",
@@ -38,13 +34,13 @@ property_types = st.sidebar.multiselect(
     "Tipo de propiedad",
     search.PROPERTY_TYPES,
     default="apartment",
-    format_func=format_option,
+    format_func=language.ES["property_type"].get,
 )
 offers = st.sidebar.multiselect(
     "Tipo de oferta",
     search.OFFERS,
     default="rent",
-    format_func=format_option,
+    format_func=language.ES["offer"].get,
 )
 
 sc = main.FincaRaizClient(1000)
