@@ -24,19 +24,19 @@ def format_option(option):
     return option.replace("-", " ").title()
 
 
-st.write("# Human Real Estate - Colombia 🏠🇨🇴")
+st.markdown("# Eterna Primavera: Análisis de Propiedades Raiz en Medellín")
 
-text_input = st.text_input("Search with a keyword", "La Estrella, Antioquia")
+text_input = st.text_input("Búsqueda de términos clave", "La Estrella, Antioquia")
 
-st.sidebar.write("## Select your options")
+st.sidebar.write("## Selecciona tu opción")
 property_types = st.sidebar.multiselect(
-    "Select property types",
+    "Tipo de propiedad",
     search.PROPERTY_TYPES,
     default="apartment",
     format_func=format_option,
 )
 offers = st.sidebar.multiselect(
-    "Select type of offer",
+    "Tipo de oferta",
     search.OFFERS,
     default="rent",
     format_func=format_option,
@@ -47,7 +47,7 @@ sc = main.FincaRaizClient(1000)
 total_properies = sc.total_listings(
     text_input, offer=offers, property_type=property_types
 )
-st.metric("Total properties under this search", f"{total_properies:,}")
+st.metric("Total de propiedades con estas características", f"{total_properies:,}")
 
 if len(property_types) == 1 and len(offers) == 1:
     df = sc.search(text_input, offer=offers, property_type=property_types)
@@ -64,18 +64,18 @@ if len(property_types) == 1 and len(offers) == 1:
         (df["price_m2"] > min) & (df["price_m2"] < max), pd.NA
     )
 
-    st.write("## Properties characteristics demo")
-    st.write(f"_{len(df)} properties_")
+    st.write("## Demo de caracterísitcas")
+    st.write(f"_{len(df)} propiedades_")
     st.dataframe(df.filter(COLUMNS_TO_SHOW))
 
-    st.write("### Locations")
+    st.write("### Localización")
     st.map(data=df.dropna(subset=["lat", "lon"]), zoom=5)
 
-    st.plotly_chart(px.histogram(df, x="price_m2", title="Price m<sup>2</sup>"))
-    st.plotly_chart(px.histogram(df, x="rooms.name", title="Number of rooms"))
-    st.plotly_chart(px.histogram(df, x="baths.name", title="Number of bathrooms"))
+    st.plotly_chart(px.histogram(df, x="price_m2", title="Precio m<sup>2</sup>"))
+    st.plotly_chart(px.histogram(df, x="rooms.name", title="Numero de cuartos"))
+    st.plotly_chart(px.histogram(df, x="baths.name", title="Numero de baños"))
 
-    strat = px.histogram(df, x="stratum.name", title="Stratum")
+    strat = px.histogram(df, x="stratum.name", title="Estrato")
     strat.update_xaxes(
         categoryorder="array",
         categoryarray=[
