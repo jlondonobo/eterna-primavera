@@ -3,7 +3,9 @@ from enum import Enum
 import pandas as pd
 
 CITY_DETAILS = (
-    pd.read_csv("aux_data/codigos_dane.csv", dtype={"CODIGO_MUNICIPIO": str})
+    pd.read_csv(
+        "eterna-primavera/aux_data/codigos_dane.csv", dtype={"CODIGO_MUNICIPIO": str}
+    )
     .set_index("CODIGO_MUNICIPIO")
     .to_dict(orient="index")
 )
@@ -48,4 +50,4 @@ def get_fr_tag(city: City) -> str:
 
 def get_name(city: City) -> str:
     """Retrun canonical name of the city."""
-    return CITY_DETAILS[city.value]["Nombre"]
+    return CITY_DETAILS[city]["Nombre"]
