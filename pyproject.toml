@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "real-estate"
+version = "0.1.0"
+description = "Medellin Real Estate Analytics"
+authors = ["jlondonob <j.londonobo@gmail.com>"]
+readme = "README.md"
+packages = [{include = "real_estate"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+streamlit = "^1.20.0"
+plotly = "^5.14.0"
+pandas = "<2.0"
+shapely = "^2.0.1"
+httpx = "^0.23.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

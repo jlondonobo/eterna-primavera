@@ -1,6 +1,0 @@
-plotly
-pandas
-streamlit
-streamlit_authenticator
-httpx
-shapely
