@@ -1,18 +1,19 @@
 [tool.poetry]
-name = "real-estate"
+name = "real-estate-analytics"
 version = "0.1.0"
-description = "Medellin Real Estate Analytics"
+description = "Porpiedad Raiz en la Ciudad de la Eterna Primavera"
 authors = ["jlondonob <j.londonobo@gmail.com>"]
 readme = "README.md"
-packages = [{include = "real_estate"}]
+packages = [{include = "real_estate_analytics"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 streamlit = "^1.20.0"
-plotly = "^5.14.0"
 pandas = "<2.0"
-shapely = "^2.0.1"
 httpx = "^0.23.3"
+plotly = "^5.14.0"
+shapely = "^2.0.1"
+real-estate = {git = "https://github.com/HumanLD/human-real-estate"}
 
 
 [build-system]
