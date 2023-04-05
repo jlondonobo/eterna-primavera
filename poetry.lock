@@ -3226,6 +3226,21 @@ files = [
 catalogue = ">=2.0.3,<2.1.0"
 
 [[package]]
+name = "st-click-detector"
+version = "0.1.3"
+description = "A Streamlit component to detect clicks"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "st-click-detector-0.1.3.tar.gz", hash = "sha256:984fccb56364af5c51dc01c1fbc46d55a14dcc5de6d18668a01461da5f2aca15"},
+    {file = "st_click_detector-0.1.3-py3-none-any.whl", hash = "sha256:10ab24a2167fe7c8abca3db6c9f149af2d0cadc0014091eaa8f1b045079199f2"},
+]
+
+[package.dependencies]
+streamlit = ">=0.63"
+
+[[package]]
 name = "stack-data"
 version = "0.6.2"
 description = "Extract data from python stack frames and tracebacks for informative displays"
@@ -3908,4 +3923,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "3b93c2d11b6a06ef79a959831b10046b8fa3f27f834075f512da6b8e4dd1ea72"
+content-hash = "a1b8635800dfa2a0dfc1ccde2c55a41a4bc96d7d9e332de97c00f400707617bf"
