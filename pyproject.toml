@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "real_estate_analytics"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.11"
 streamlit = "^1.20.0"
 pandas = "<2.0"
 httpx = "^0.23.3"
@@ -16,6 +16,9 @@ shapely = "^2.0.1"
 real-estate = {git = "https://github.com/HumanLD/human-real-estate"}
 ipykernel = "^6.22.0"
 st-click-detector = "^0.1.3"
+gdal = "^3.6.3"
+geopandas = "^0.12.2"
+geojson = "^3.0.1"
 
 
 [build-system]
