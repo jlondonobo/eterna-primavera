@@ -1,14 +1,18 @@
 from enum import Enum
 
 import pandas as pd
+import streamlit as st
 
-CITY_DETAILS = (
-    pd.read_csv(
-        "eterna-primavera/aux_data/codigos_dane.csv", dtype={"CODIGO_MUNICIPIO": str}
+
+@st.cache_data
+def read_city_details():
+    return (
+        pd.read_csv(
+            "eterna-primavera/aux_data/codigos_dane.csv", dtype={"CODIGO_MUNICIPIO": str}
+        )
+        .set_index("CODIGO_MUNICIPIO")
+        .to_dict(orient="index")
     )
-    .set_index("CODIGO_MUNICIPIO")
-    .to_dict(orient="index")
-)
 
 
 class City(str, Enum):
@@ -20,7 +24,7 @@ class City(str, Enum):
     sabaneta = "05631"
     copacabana = "05212"
     la_estrella = "05380"
-    girardota = "05038"
+    girardota = "05308"
     barbosa = "05079"
 
 
@@ -50,4 +54,9 @@ def get_fr_tag(city: City) -> str:
 
 def get_name(city: City) -> str:
     """Retrun canonical name of the city."""
-    return CITY_DETAILS[city]["Nombre"]
+    city_details = read_city_details()
+    return city_details[city]["Nombre"]
+
+
+def get_inhabitants(city: City) -> int:
+    return 100000
