@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Porpiedad Raiz en la Ciudad de la Eterna Primavera"
 authors = ["jlondonob <j.londonobo@gmail.com>"]
 readme = "README.md"
-packages = [{include = "real_estate_analytics"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11"
