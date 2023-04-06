@@ -4,17 +4,6 @@ import pandas as pd
 import streamlit as st
 
 
-@st.cache_data
-def read_city_details():
-    return (
-        pd.read_csv(
-            "eterna-primavera/aux_data/codigos_dane.csv", dtype={"CODIGO_MUNICIPIO": str}
-        )
-        .set_index("CODIGO_MUNICIPIO")
-        .to_dict(orient="index")
-    )
-
-
 class City(str, Enum):
     medellin = "05001"
     bello = "05088"
@@ -26,6 +15,17 @@ class City(str, Enum):
     la_estrella = "05380"
     girardota = "05308"
     barbosa = "05079"
+
+
+@st.cache_data
+def read_city_details():
+    return (
+        pd.read_csv(
+            "eterna-primavera/aux_data/codigos_dane.csv", dtype={"CODIGO_MUNICIPIO": str}
+        )
+        .set_index("CODIGO_MUNICIPIO")
+        .to_dict(orient="index")
+    )
 
 
 FR_ALTERNATIVE_CODES = {
@@ -59,4 +59,4 @@ def get_name(city: City) -> str:
 
 
 def get_inhabitants(city: City) -> int:
-    return 100000
+    return 100000    return 100000
