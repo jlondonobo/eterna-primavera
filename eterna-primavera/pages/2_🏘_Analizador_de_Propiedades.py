@@ -2,16 +2,13 @@ import constants
 import language
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import streamlit as st
 from cities import City, get_city_tag, get_fr_tag, get_name
 from real_estate.finca_raiz import main, search
 from shapely import wkt
 
-st.set_page_config(
-    page_title="Eterna Primavera",
-    page_icon="🏡",
-    layout="wide"
-)
+st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
 
 
 def trim_outliers(s: pd.Series, min: float = 0.05, max: float = 0.95) -> pd.Series:
@@ -95,7 +92,8 @@ col2.metric("Área promedio", f"{df['area'].mean():,.0f}m2")
 col3.metric("Total de propiedades", value=f"{total_properies:,}")
 
 
-st.markdown('''
+st.markdown(
+    """
 <style>
 /*center metric label*/
 [data-testid="stHorizontalBlock"]{
@@ -115,38 +113,66 @@ st.markdown('''
     display: block;
 }
 </style>
-''', unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 
-
-plotly_chart = px.histogram(df, x="price_m2", title="Precio m<sup>2</sup>")
+st.markdown("## Cuanto cuesta el metro cuadrado de estas propiedades?")
+plotly_chart = px.histogram(df, x="price_m2")
 plotly_chart.update_layout(bargap=0.05)
 plotly_chart.update_xaxes(tickformat="$,.2s")
 
-st.plotly_chart(plotly_chart)
+st.plotly_chart(plotly_chart, use_container_width=True)
 
 
-# st.write("## Demo de caracterísitcas")
-# st.write(f"_{len(df)} propiedades_")
-# st.dataframe(df.filter(constants.DISPLAY_COLUMNS))
+def compute_donut(s: pd.Series) -> go.Figure:
+    mapper = {
+        "rooms.name": "No. Habitaciones",
+        "baths.name": "No. Baños",
+        "stratum.name": "Estrato",
+    }
+    fig = go.Figure(
+        data=[
+            go.Pie(
+                labels=s.index,
+                values=s.values,
+                hole=0.5,
+                textinfo="label+percent",
+                sort=False,
+                direction="clockwise"
+            )
+        ]
+    )
+    fig.update_layout(
+        margin=dict(l=0, r=0, t=30, b=0),
+        showlegend=False,
+        title=dict(
+            text=mapper[s.name],
+            x=0.5,
+            xanchor="center",
+        ),
+        height=300,
+    )
+    return fig
 
-# st.write("### Localización")
-# st.map(data=df.dropna(subset=["lat", "lon"]), zoom=5)
 
-# st.plotly_chart(px.histogram(df, x="price_m2", title="Precio m<sup>2</sup>"))
-# st.plotly_chart(px.histogram(df, x="rooms.name", title="Numero de cuartos"))
-# st.plotly_chart(px.histogram(df, x="baths.name", title="Numero de baños"))
+st.markdown("## Cuales son sus características?")
 
-# strat = px.histogram(df, x="stratum.name", title="Estrato")
-# strat.update_xaxes(
-#     categoryorder="array",
-#     categoryarray=[
-#         "Estrato 1",
-#         "Estrato 2",
-#         "Estrato 3",
-#         "Estrato 4",
-#         "Estrato 5",
-#         "Estrato 6",
-#     ],
-# )
-# st.plotly_chart(strat)
+rooms = df["rooms.name"].value_counts().sort_index()
+baths = df["baths.name"].value_counts().sort_index()
+stratum = df["stratum.name"].value_counts().sort_index()
+
+
+def get_most_common_config(s: pd.Series) -> str:
+    """Return most common type of Room, Bath or Stratum from value counts."""
+    return str(s.idxmax())
+
+st.markdown(f"La mayoría de propiedades de esta búsqueda tienen **{get_most_common_config(rooms)} habitaciones**, **{get_most_common_config(baths)} baños** y son **{get_most_common_config(stratum).lower()}**.")
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.plotly_chart(compute_donut(rooms), use_container_width=True)
+with col2:
+    st.plotly_chart(compute_donut(baths), use_container_width=True)
+with col3:
+    st.plotly_chart(compute_donut(stratum), use_container_width=True)
