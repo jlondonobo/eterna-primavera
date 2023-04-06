@@ -7,6 +7,7 @@ import streamlit as st
 from cities import City, get_city_tag, get_fr_tag, get_name
 from real_estate.finca_raiz import main, search
 from shapely import wkt
+from utils import import_css
 
 st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
 
@@ -78,44 +79,13 @@ with st.sidebar:
         format_func=language.ES["offer"].get,
     )
 
+import_css("eterna-primavera/assets/2_analizador_style.css")
 
 sc = main.FincaRaizClient(20)
 total_properies = fetch_stat_total_listings(city, offer, property_type)
 df = fetch_properties(city, offer, property_type)
 
-st.markdown(
-    """
-    <h1 style="text-align: center; padding: 5px;">Analizador de Propiedades</h1>
-    """,
-    unsafe_allow_html=True,
-)
-st.markdown(
-        """
-<style>
-/*center metric label*/
-[data-testid="stHorizontalBlock"]{
-    outline: 1px solid black;
-    padding: 20px 50px;
-    margin-top: 20px;
-    border-radius: 10px;
-}
-
-[data-testid="metric-container"]{
-    text-align: center;
-}
-
-/*center metric value*/
-[data-testid="stMetricLabel"]{
-    display: block;
-}
-
-div[data-testid="stMetricValue"] > div {
-    font-weight: bold;
-}
-</style>
-""",
-        unsafe_allow_html=True,
-    )
+st.markdown("# Analizador de Propiedades")
 
 col1, col2, col3 = st.columns(3)
 
@@ -129,7 +99,7 @@ with tab1:
         f"## Precios de {language.ES['property_type'][property_type].lower()}s en {get_name(city)}"
     )
 
-    plotly_chart = px.histogram(df, x="price_m2")
+    plotly_chart = px.histogram(df, x="price_m2", labels={"price_m2": "Precio m<sup>2</sup>"})
     plotly_chart.update_layout(bargap=0.05, height=500)
     plotly_chart.update_xaxes(tickformat="$,.2s")
 
@@ -177,21 +147,6 @@ with tab2:
     def get_most_common_config(s: pd.Series) -> str:
         """Return most common type of Room, Bath or Stratum from value counts."""
         return str(s.idxmax())
-
-    # st.markdown(
-    #     """
-    # <style>
-    # /*remove metric label*/
-    # [data-testid="stHorizontalBlock"]{
-    #     outline: 0px;
-    #     padding: 0px;
-    #     margin-top: 20px;
-    #     border-radius: 0px;
-    # }
-    # </style>
-    # """,
-    #     unsafe_allow_html=True,
-    # )
 
     st.markdown(
         f"La mayoría de propiedades de esta búsqueda tienen **{get_most_common_config(rooms)} habitaciones**, **{get_most_common_config(baths)} baños** y son **{get_most_common_config(stratum).lower()}**."

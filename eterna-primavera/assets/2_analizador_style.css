@@ -1,0 +1,25 @@
+h1 {
+    text-align: center;
+    padding: 5px;
+}
+
+/*center metric label*/
+[data-testid="stHorizontalBlock"]{
+    outline: 1px solid black;
+    padding: 20px 50px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+[data-testid="metric-container"]{
+    text-align: center;
+}
+
+/*center metric value*/
+[data-testid="stMetricLabel"]{
+    display: block;
+}
+
+div[data-testid="stMetricValue"] > div {
+    font-weight: bold;
+}

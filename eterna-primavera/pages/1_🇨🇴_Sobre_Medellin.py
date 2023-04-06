@@ -2,8 +2,11 @@ import streamlit as st
 import utils
 from cities import City, get_inhabitants, get_name
 from st_click_detector import click_detector
+from utils import import_css
 
 st.set_page_config(layout="wide")
+
+import_css("eterna-primavera/assets/1_sobre_style.css")
 st.markdown("# Sobre Medellín")
 st.markdown(
     """
@@ -49,16 +52,6 @@ content = f"""
     </p>
 """
 
-st.markdown(
-    """
-    <style>
-    iframe {
-        margin-bottom: -30px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 clicked = click_detector(content)
 
 st.info("Toca en el nombre de un municipio para ver su ubicación en el mapa.", icon="💡")

@@ -10,6 +10,12 @@ from geojson import Feature, FeatureCollection
 load_dotenv()
 
 
+def import_css(file_name: str) -> None:
+    """Import a CSS file into the Streamlit app."""
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
 @st.cache_data
 def load_geometries() -> gpd.GeoDataFrame:
     """Returns a GeoDataFrame with the geometries of the cities in the Valle Aburra."""
