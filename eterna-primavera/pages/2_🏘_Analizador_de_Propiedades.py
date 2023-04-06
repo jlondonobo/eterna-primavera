@@ -83,8 +83,12 @@ sc = main.FincaRaizClient(20)
 total_properies = fetch_stat_total_listings(city, offer, property_type)
 df = fetch_properties(city, offer, property_type)
 
-st.markdown("# 🏘 Analizador de Propiedades")
-
+st.markdown(
+    """
+    <h1 style="text-align: center; padding: 5px;">Analizador de Propiedades</h1>
+    """,
+    unsafe_allow_html=True,
+)
 col1, col2, col3 = st.columns(3)
 
 col1.metric("Precio promedio", f"${df['price'].mean():,.0f}")
@@ -101,7 +105,6 @@ st.markdown(
     padding: 20px 50px;
     margin-top: 20px;
     border-radius: 10px;
-
 }
 
 [data-testid="metric-container"]{
@@ -167,6 +170,22 @@ stratum = df["stratum.name"].value_counts().sort_index()
 def get_most_common_config(s: pd.Series) -> str:
     """Return most common type of Room, Bath or Stratum from value counts."""
     return str(s.idxmax())
+
+
+st.markdown(
+    """
+<style>
+/*remove metric label*/
+[data-testid="stHorizontalBlock"]{
+    outline: 0px;
+    padding: 0px;
+    margin-top: 20px;
+    border-radius: 0px;
+}
+</style>
+""",
+    unsafe_allow_html=True,
+)
 
 st.markdown(f"La mayoría de propiedades de esta búsqueda tienen **{get_most_common_config(rooms)} habitaciones**, **{get_most_common_config(baths)} baños** y son **{get_most_common_config(stratum).lower()}**.")
 col1, col2, col3 = st.columns(3)
