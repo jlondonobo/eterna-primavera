@@ -1,19 +1,5 @@
 from enum import Enum
 
-import pandas as pd
-import streamlit as st
-
-
-@st.cache_data
-def read_city_details():
-    return (
-        pd.read_csv(
-            "eterna-primavera/aux_data/codigos_dane.csv", dtype={"CODIGO_MUNICIPIO": str}
-        )
-        .set_index("CODIGO_MUNICIPIO")
-        .to_dict(orient="index")
-    )
-
 
 class City(str, Enum):
     medellin = "05001"
@@ -40,23 +26,3 @@ FR_ALTERNATIVE_CODES = {
     City.girardota: "5500009-girardota",
     City.barbosa: "5500010-barbosa",
 }
-
-
-def get_city_tag(city: City) -> str:
-    """Return FincaRaiz-city tag for a city given its DANE code."""
-    return f"city-colombia-{city[:2]}-{city[2:]}"
-
-
-def get_fr_tag(city: City) -> str:
-    """Retrun propietary FincaRaiz tag for a place"""
-    return f"colombia-antioquia-{FR_ALTERNATIVE_CODES[city]}"
-
-
-def get_name(city: City) -> str:
-    """Retrun canonical name of the city."""
-    city_details = read_city_details()
-    return city_details[city]["Nombre"]
-
-
-def get_inhabitants(city: City) -> int:
-    return 100000
