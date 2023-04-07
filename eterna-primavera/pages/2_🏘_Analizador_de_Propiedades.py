@@ -1,4 +1,3 @@
-import constants
 import language
 import pandas as pd
 import plotly.express as px
@@ -7,7 +6,7 @@ import streamlit as st
 from cities import City, get_city_tag, get_fr_tag, get_name
 from real_estate.finca_raiz import main, search
 from shapely import wkt
-from utils import import_css
+from utils import import_css, plot_h3_listings
 
 st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
 
@@ -62,6 +61,8 @@ def fetch_stat_total_listings(
 
 # Sidebar
 with st.sidebar:
+    valid_offers = [o for o in search.OFFERS if o != "lease"]
+
     st.markdown("## Selecciona tu opción")
     city = City(
         st.selectbox("Ciudad", [c.value for c in City], index=0, format_func=get_name)
@@ -74,7 +75,7 @@ with st.sidebar:
     )
     offer = st.selectbox(
         "Tipo de oferta",
-        search.OFFERS,
+        valid_offers,
         index=0,
         format_func=language.ES["offer"].get,
     )
@@ -93,13 +94,17 @@ col1.metric("Precio promedio", f"${df['price'].mean():,.0f}")
 col2.metric("Área promedio", f"{df['area'].mean():,.0f}m2")
 col3.metric("Total de propiedades", value=f"{total_properies:,}")
 
-tab1, tab2 = st.tabs(["Análisis de Precios", "Características de las Propiedades"])
+tab1, tab2, tab3 = st.tabs(
+    ["Análisis de Precios", "Características de las Propiedades", "Localización"]
+)
 with tab1:
     st.markdown(
         f"## Precios de {language.ES['property_type'][property_type].lower()}s en {get_name(city)}"
     )
 
-    plotly_chart = px.histogram(df, x="price_m2", labels={"price_m2": "Precio m<sup>2</sup>"})
+    plotly_chart = px.histogram(
+        df, x="price_m2", labels={"price_m2": "Precio m<sup>2</sup>"}
+    )
     plotly_chart.update_layout(bargap=0.05, height=500)
     plotly_chart.update_xaxes(tickformat="$,.2s")
 
@@ -158,3 +163,8 @@ with tab2:
         st.plotly_chart(compute_donut(baths), use_container_width=True)
     with col3:
         st.plotly_chart(compute_donut(stratum), use_container_width=True)
+
+
+with tab3:
+    st.markdown("## Donde están localizadas?")
+    st.plotly_chart(plot_h3_listings(df, "lat", "lon", 9), use_container_width=True)
