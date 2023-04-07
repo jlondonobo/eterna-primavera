@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 
 import pandas as pd
@@ -59,4 +60,6 @@ def get_name(city: City) -> str:
 
 
 def get_inhabitants(city: City) -> int:
-    return 100000
+    with open("eterna-primavera/aux_data/population.json", "r") as f:
+        population = json.load(f)
+    return int(population[city])

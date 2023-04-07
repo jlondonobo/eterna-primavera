@@ -23,7 +23,7 @@ st.markdown(
     para vivir**. Este auge ha llevado a una expansión en la oferta inmobiliaria,
     desde apartamentos de lujo y condominios hasta nuevas urbanizaciones
     y proyectos de viviendas sostenibles.
-    """    
+    """
 )
 st.markdown(
     """
@@ -66,5 +66,7 @@ st.markdown(
 
 # PLOT: Highlightable cities
 cities = load_cities()
-plot = plot_highlighted_choropleth(cities, clicked, "MPIO_CDPMP")
+plot = plot_highlighted_choropleth(
+    cities, clicked, "MPIO_CDPMP", hover_data={"population": True}
+)
 st.plotly_chart(plot, use_container_width=True)
