@@ -19,7 +19,7 @@ with st.expander("¿Por qué Medellín?"):
         Por qué no?
         """
     )
-    
+
 with st.expander("Cómo puedo usar Eterna Primavera?"):
     st.markdown(
         """

@@ -1,19 +1,7 @@
-import json
 from enum import Enum
+from typing import Literal
 
 import pandas as pd
-import streamlit as st
-
-
-@st.cache_data
-def read_city_details():
-    return (
-        pd.read_csv(
-            "eterna-primavera/aux_data/codigos_dane.csv", dtype={"CODIGO_MUNICIPIO": str}
-        )
-        .set_index("CODIGO_MUNICIPIO")
-        .to_dict(orient="index")
-    )
 
 
 class City(str, Enum):
@@ -53,13 +41,12 @@ def get_fr_tag(city: City) -> str:
     return f"colombia-antioquia-{FR_ALTERNATIVE_CODES[city]}"
 
 
-def get_name(city: City) -> str:
+def get_name(city: City, source: pd.DataFrame) -> str:
     """Retrun canonical name of the city."""
-    city_details = read_city_details()
-    return city_details[city]["Nombre"]
+    return source.at[city, "NOMBRE"]
 
 
-def get_inhabitants(city: City) -> int:
-    with open("eterna-primavera/aux_data/population.json", "r") as f:
-        population = json.load(f)
-    return int(population[city])
+def get_inhabitants(city: City, year: Literal[2023, 2035], source: pd.DataFrame) -> int:
+    """Return estimated number of inhabitants for a city in a given year."""    
+    column = "population_2023" if year == 2023 else "population_2035"
+    return source.at[city, column]

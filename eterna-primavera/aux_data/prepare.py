@@ -13,7 +13,7 @@ def main():
             POPULATION=lambda df: df["Población"].astype(int),
         )
         .pivot_table(values="POPULATION", index=["MPIO", "DPMP"], columns="YEAR",)
-        .filter([2020, 2035])
+        .filter([2023, 2035])
         .add_prefix("population_")
         .reset_index("DPMP")
         .rename(columns={"DPMP": "NOMBRE"})
