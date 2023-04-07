@@ -19,6 +19,7 @@ gdal = "^3.6.3"
 geopandas = "^0.12.2"
 geojson = "^3.0.1"
 python-dotenv = "^1.0.0"
+h3 = "^3.7.6"
 
 
 [build-system]
