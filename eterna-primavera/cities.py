@@ -1,7 +1,4 @@
 from enum import Enum
-from typing import Literal
-
-import pandas as pd
 
 
 class City(str, Enum):
@@ -29,24 +26,3 @@ FR_ALTERNATIVE_CODES = {
     City.girardota: "5500009-girardota",
     City.barbosa: "5500010-barbosa",
 }
-
-
-def get_city_tag(city: City) -> str:
-    """Return FincaRaiz-city tag for a city given its DANE code."""
-    return f"city-colombia-{city[:2]}-{city[2:]}"
-
-
-def get_fr_tag(city: City) -> str:
-    """Retrun propietary FincaRaiz tag for a place"""
-    return f"colombia-antioquia-{FR_ALTERNATIVE_CODES[city]}"
-
-
-def get_name(city: City, source: pd.DataFrame) -> str:
-    """Retrun canonical name of the city."""
-    return source.at[city, "NOMBRE"]
-
-
-def get_inhabitants(city: City, year: Literal[2023, 2035], source: pd.DataFrame) -> int:
-    """Return estimated number of inhabitants for a city in a given year."""    
-    column = "population_2023" if year == 2023 else "population_2035"
-    return source.at[city, column]

@@ -2,14 +2,18 @@ import language
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from cities import City, get_city_tag, get_fr_tag, get_name
+from cities import City
+from loaders.load_cities import load_cities
+from loaders.load_geometries import load_geometries
 from plots import h3_choropleth_from_latlon, plot_donut
 from real_estate.finca_raiz import main, search
 from shapely import wkt
 from transformers.trim_outliers import trim_outliers
-from utils import import_css
+from utils import get_city_tag, get_fr_tag, get_name, import_css
 
 st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
+geometries = load_geometries()
+cities = load_cities()
 
 
 def parse_prices(df: pd.DataFrame) -> pd.DataFrame:

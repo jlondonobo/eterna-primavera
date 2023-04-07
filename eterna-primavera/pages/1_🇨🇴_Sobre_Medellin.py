@@ -1,10 +1,10 @@
 import streamlit as st
-from cities import City, get_inhabitants, get_name
+from cities import City
 from loaders.load_cities import load_cities
 from loaders.load_geometries import load_geometries
 from plots import plot_highlighted_choropleth
 from st_click_detector import click_detector
-from utils import import_css
+from utils import get_inhabitants, get_name, import_css
 
 st.set_page_config(layout="wide")
 geometries = load_geometries()
@@ -45,7 +45,7 @@ st.markdown(
 
 
 def clickable_city(city: City):
-    return f'<a href="" id="{city}">{get_name(city, cities)}</a>'
+    return f'<a href="" id="{city}">{get_name(city)}</a>'
 
 
 content = f"""
@@ -69,16 +69,13 @@ clicked = click_detector(content)
 st.info("Toca en el nombre de un municipio para ver su ubicación en el mapa.", icon="💡")
 st.markdown(
     f"""
-    <h4 style="padding-bottom: 0px;">{get_name(City(clicked), cities) if clicked else "Medellín y sus municipios"}</h4>
-    <p><i>Total de habitantes: {get_inhabitants(City(clicked), YEAR, cities) if clicked else cities["population_2023"].sum():,}<i></p>
+    <h4 style="padding-bottom: 0px;">{get_name(City(clicked)) if clicked else "Medellín y sus municipios"}</h4>
+    <p><i>Total de habitantes: {get_inhabitants(City(clicked), YEAR) if clicked else cities["population_2023"].sum():,}<i></p>
     """,
     unsafe_allow_html=True,
 )
 
 
-
-# PLOT: Highlightable cities
-cities = load_cities()
 plot = plot_highlighted_choropleth(
     get_geometries_with_data(), clicked, "MPIO_CDPMP", hover_data={"population_2023": True}
 )
