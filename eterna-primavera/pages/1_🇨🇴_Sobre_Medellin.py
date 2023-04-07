@@ -1,6 +1,7 @@
 import streamlit as st
-import utils
 from cities import City, get_inhabitants, get_name
+from loaders.geometries import load_cities
+from plots import plot_highlighted_choropleth
 from st_click_detector import click_detector
 from utils import import_css
 
@@ -62,4 +63,8 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.plotly_chart(utils.plot_map_with_selection(clicked), use_container_width=True)
+
+# PLOT: Highlightable cities
+cities = load_cities()
+plot = plot_highlighted_choropleth(cities, clicked, "MPIO_CDPMP")
+st.plotly_chart(plot, use_container_width=True)

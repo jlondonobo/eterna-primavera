@@ -1,19 +1,15 @@
 import language
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import streamlit as st
 from cities import City, get_city_tag, get_fr_tag, get_name
+from plots import h3_choropleth_from_latlon, plot_donut
 from real_estate.finca_raiz import main, search
 from shapely import wkt
-from utils import import_css, plot_h3_listings
+from transformers.trim_outliers import trim_outliers
+from utils import import_css
 
 st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
-
-
-def trim_outliers(s: pd.Series, min: float = 0.05, max: float = 0.95) -> pd.Series:
-    """Returns a series with outliers turned into NA."""
-    return s.where((s > s.quantile(min)) & (s < s.quantile(max)), pd.NA)
 
 
 def parse_prices(df: pd.DataFrame) -> pd.DataFrame:
@@ -83,17 +79,22 @@ with st.sidebar:
 import_css("eterna-primavera/assets/2_analizador_style.css")
 
 sc = main.FincaRaizClient(20)
-total_properies = fetch_stat_total_listings(city, offer, property_type)
-df = fetch_properties(city, offer, property_type)
+stat_total_listings = fetch_stat_total_listings(city, offer, property_type)
+listings = fetch_properties(city, offer, property_type)
 
+# ------ TITULO
 st.markdown("# Analizador de Propiedades")
 
+# ------ METRICS
 col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Precio promedio", f"${listings['price'].mean():,.0f}")
+with col2:
+    st.metric("Área promedio", f"{listings['area'].mean():,.0f}m2")
+with col3:
+    st.metric("Total de propiedades", value=f"{stat_total_listings:,}")
 
-col1.metric("Precio promedio", f"${df['price'].mean():,.0f}")
-col2.metric("Área promedio", f"{df['area'].mean():,.0f}m2")
-col3.metric("Total de propiedades", value=f"{total_properies:,}")
-
+# ------ TABS
 tab1, tab2, tab3 = st.tabs(
     ["Análisis de Precios", "Características de las Propiedades", "Localización"]
 )
@@ -102,52 +103,24 @@ with tab1:
         f"## Precios de {language.ES['property_type'][property_type].lower()}s en {get_name(city)}"
     )
 
-    plotly_chart = px.histogram(
-        df, x="price_m2", labels={"price_m2": "Precio m<sup>2</sup>"}
-    )
-    plotly_chart.update_layout(bargap=0.05, height=500)
-    plotly_chart.update_xaxes(tickformat="$,.2s")
+    def simple_histogram():
+        """Plot price histogram"""
+        histogram = px.histogram(
+            listings, x="price_m2", labels={"price_m2": "Precio m<sup>2</sup>"}
+        )
+        histogram.update_layout(bargap=0.05, height=500)
+        histogram.update_xaxes(tickformat="$,.2s")
+        return histogram
 
-    st.plotly_chart(plotly_chart, use_container_width=True)
+    st.plotly_chart(simple_histogram(), use_container_width=True)
 
 
 with tab2:
-
-    def compute_donut(s: pd.Series) -> go.Figure:
-        mapper = {
-            "rooms.name": "No. Habitaciones",
-            "baths.name": "No. Baños",
-            "stratum.name": "Estrato",
-        }
-        fig = go.Figure(
-            data=[
-                go.Pie(
-                    labels=s.index,
-                    values=s.values,
-                    hole=0.5,
-                    textinfo="label+percent",
-                    sort=False,
-                    direction="clockwise",
-                )
-            ]
-        )
-        fig.update_layout(
-            margin=dict(l=0, r=0, t=30, b=0),
-            showlegend=False,
-            title=dict(
-                text=mapper[s.name],
-                x=0.5,
-                xanchor="center",
-            ),
-            height=300,
-        )
-        return fig
-
     st.markdown("## Cuales son sus características?")
 
-    rooms = df["rooms.name"].value_counts().sort_index()
-    baths = df["baths.name"].value_counts().sort_index()
-    stratum = df["stratum.name"].value_counts().sort_index()
+    rooms = listings["rooms.name"].value_counts().sort_index()
+    baths = listings["baths.name"].value_counts().sort_index()
+    stratum = listings["stratum.name"].value_counts().sort_index()
 
     def get_most_common_config(s: pd.Series) -> str:
         """Return most common type of Room, Bath or Stratum from value counts."""
@@ -158,13 +131,16 @@ with tab2:
     )
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.plotly_chart(compute_donut(rooms), use_container_width=True)
+        st.plotly_chart(plot_donut(rooms), use_container_width=True)
     with col2:
-        st.plotly_chart(compute_donut(baths), use_container_width=True)
+        st.plotly_chart(plot_donut(baths), use_container_width=True)
     with col3:
-        st.plotly_chart(compute_donut(stratum), use_container_width=True)
+        st.plotly_chart(plot_donut(stratum), use_container_width=True)
 
 
 with tab3:
     st.markdown("## Donde están localizadas?")
-    st.plotly_chart(plot_h3_listings(df, "lat", "lon", 9), use_container_width=True)
+    choropleth = h3_choropleth_from_latlon(
+        listings, "lat", "lon", 9, zoom=11
+    )
+    st.plotly_chart(choropleth, use_container_width=True)
