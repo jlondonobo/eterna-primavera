@@ -40,13 +40,13 @@ def clickable_city(city: City):
 content = f"""
     <p>El área metropolitana de Medellín está compuesta por <b>10 municipios</b> que se
     han ido incorporando a lo largo del tiempo. Estos municipios son:
+    {clickable_city(City.caldas)},
+    {clickable_city(City.la_estrella)},
+    {clickable_city(City.sabaneta)},
+    {clickable_city(City.envigado)},
+    {clickable_city(City.itagui)},
     {clickable_city(City.medellin)},
     {clickable_city(City.bello)},
-    {clickable_city(City.itagui)},
-    {clickable_city(City.envigado)},
-    {clickable_city(City.sabaneta)},
-    {clickable_city(City.la_estrella)},
-    {clickable_city(City.caldas)},
     {clickable_city(City.copacabana)},
     {clickable_city(City.girardota)} y
     {clickable_city(City.barbosa)}
