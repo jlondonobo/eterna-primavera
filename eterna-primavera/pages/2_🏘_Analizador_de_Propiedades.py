@@ -117,5 +117,4 @@ with tab3:
         type, listings, "lat", "lon", 9, zoom=11, 
     )
     st.plotly_chart(choropleth, use_container_width=True)
-    st.plotly_chart(choropleth, use_container_width=True)
-    st.plotly_chart(choropleth, use_container_width=True)
+
