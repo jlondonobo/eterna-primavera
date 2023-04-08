@@ -2,21 +2,24 @@ import streamlit as st
 from cities import City
 from loaders.load_cities import load_cities
 from loaders.load_geometries import load_geometries
-from plots import plot_highlighted_choropleth
 from st_click_detector import click_detector
-from utils import get_inhabitants, get_name, import_css
 
 st.set_page_config(layout="wide")
+
+# Utils run the function load_cities() should fix this issue
+# Meanwhile keep below st.set_page
+from plots import plot_highlighted_choropleth
+from utils import get_inhabitants, get_name, import_css
+
 geometries = load_geometries()
 cities = load_cities()
+# TEMPORARY
+YEAR = 2023
 
 
 def get_geometries_with_data():
     return geometries.merge(cities, left_on="MPIO_CDPMP", right_on="MPIO", how="left")
 
-
-# TEMPORARY
-YEAR = 2023
 
 import_css("eterna-primavera/assets/1_sobre_style.css")
 st.markdown("# Sobre Medellín")
@@ -80,3 +83,4 @@ plot = plot_highlighted_choropleth(
     get_geometries_with_data(), clicked, "MPIO_CDPMP", hover_data={"population_2023": True}
 )
 st.plotly_chart(plot, use_container_width=True)
+
