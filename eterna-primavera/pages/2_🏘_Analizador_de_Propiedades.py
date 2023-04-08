@@ -6,8 +6,6 @@ from cities import City
 from loaders.load_cities import load_cities
 from loaders.load_geometries import load_geometries
 from loaders.load_listings import load_listings
-from shapely import wkt
-from transformers.trim_outliers import trim_outliers
 
 st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
 
@@ -15,17 +13,6 @@ st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide
 # Meanwhile keep below st.set_page
 from plots import h3_choropleth_from_latlon, plot_donut
 from utils import get_name, import_css
-
-
-def parse_prices(df: pd.DataFrame) -> pd.DataFrame:
-    # TODO: This should be part of the data pipeline, not part of the app.
-    """Parse prices as numeric and convert to millions."""
-    return df.assign(
-        price=lambda df: trim_outliers(pd.to_numeric(df["price"])),
-        price_mm=lambda df: df["price"] / 1000000,
-        price_m2=lambda df: trim_outliers(pd.to_numeric(df["price_m2"])),
-        price_m2_mm=lambda df: df["price_m2"] / 1000000,
-    )
 
 
 listings = load_listings()
@@ -36,6 +23,7 @@ cities = load_cities()
 # Sidebar
 with st.sidebar:
     valid_offers = ["sell", "rent"]
+    valid_properties = ["apartment", "studio", "house", "country-house", "farm"]
 
     st.markdown("## Selecciona tu opción")
     city = City(
@@ -43,7 +31,7 @@ with st.sidebar:
     )
     property_type = st.selectbox(
         "Tipo de propiedad",
-        search.PROPERTY_TYPES,
+        valid_properties,
         index=0,
         format_func=language.ES["property_type"].get,
     )

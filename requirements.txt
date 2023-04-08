@@ -10,4 +10,3 @@ st-click-detector
 httpx
 geojson
 h3
-flit

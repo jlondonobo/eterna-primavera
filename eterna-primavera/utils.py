@@ -2,7 +2,7 @@ from typing import Literal
 
 import pandas as pd
 import streamlit as st
-from cities import FR_ALTERNATIVE_CODES, City
+from cities import City
 from loaders.load_cities import load_cities
 
 CITIES = load_cities()
