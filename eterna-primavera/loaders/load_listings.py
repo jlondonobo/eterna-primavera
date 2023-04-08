@@ -5,6 +5,7 @@ from shapely import wkt
 from transformers.trim_outliers import trim_outliers
 
 COLS_OF_INTERES = [
+    "id",
     "area",
     "offer",
     "property_type",
