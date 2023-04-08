@@ -27,9 +27,9 @@ def parse_prices(df: pd.DataFrame) -> pd.DataFrame:
     """Parse prices as numeric and convert to millions."""
     return df.assign(
         price=lambda df: trim_outliers(pd.to_numeric(df["price"])),
-        price_mm=lambda df: df["price"] / 1000000,
+        # price_mm=lambda df: df["price"] / 1000000,
         price_m2=lambda df: trim_outliers(pd.to_numeric(df["price_m2"])),
-        price_m2_mm=lambda df: df["price_m2"] / 1000000,
+        # price_m2_mm=lambda df: df["price_m2"] / 1000000,
     )
 
 

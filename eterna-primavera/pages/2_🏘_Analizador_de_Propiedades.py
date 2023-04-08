@@ -6,6 +6,7 @@ from cities import City
 from loaders.load_cities import load_cities
 from loaders.load_geometries import load_geometries
 from loaders.load_listings import load_listings
+from constants import EXCHANGE_RATE
 
 st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
 
@@ -41,7 +42,21 @@ with st.sidebar:
         index=0,
         format_func=language.ES["offer"].get,
     )
+    currency = st.radio(
+        "Moneda",
+        ["COP", "USD"],
+        horizontal=True,
+    )
 
+
+def update_currency(df: pd.DataFrame, currency: str) -> pd.DataFrame:
+    """Convert prices to COP or USD."""
+    df["price"] = df["price"] / EXCHANGE_RATE[currency]
+    df["price_m2"] = df["price_m2"] / EXCHANGE_RATE[currency]
+    return df
+
+
+listings = update_currency(listings, currency)
 import_css("eterna-primavera/assets/2_analizador_style.css")
 
 # ------ TITULO
@@ -50,7 +65,7 @@ st.markdown("# Analizador de Propiedades")
 # ------ METRICS
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric("Precio promedio", f"${listings['price'].mean():,.0f}")
+    st.metric(f"Precio promedio ({currency})", f"${listings['price'].mean():,.0f}")
 with col2:
     st.metric("Área promedio", f"{listings['area'].mean():,.0f}m2")
 with col3:
@@ -68,7 +83,7 @@ with tab1:
     def simple_histogram():
         """Plot price histogram"""
         histogram = px.histogram(
-            listings, x="price_m2", labels={"price_m2": "Precio m<sup>2</sup>"}
+            listings, x="price_m2", labels={"price_m2": f"{currency} por m<sup>2</sup>"}
         )
         histogram.update_layout(bargap=0.05, height=500)
         histogram.update_xaxes(tickformat="$,.2s")
@@ -117,4 +132,3 @@ with tab3:
         type, listings, "lat", "lon", 9, zoom=11, 
     )
     st.plotly_chart(choropleth, use_container_width=True)
-
