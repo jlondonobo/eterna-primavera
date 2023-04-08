@@ -1,9 +1,8 @@
 --find-links=https://girder.github.io/large_image_wheels GDAL
+streamlit
 pandas
 shapely
 geopandas
-pip
-pip:
 ipykernel
 plotly
 python-dotenv
@@ -11,4 +10,3 @@ st-click-detector
 httpx
 geojson
 h3
-streamlit
