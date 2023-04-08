@@ -24,3 +24,11 @@ dependencies:
   - h3>=3.7.6,<4.0.0
   - openpyxl>=3.1.2,<4.0.0
   - poetry2conda>=0.3.0,<0.4.0
+  - pip:
+      - ipykernel
+      - plotly
+      - python-dotenv
+      - st-click-detector
+      - httpx
+      - geojson
+      - h3
