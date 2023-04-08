@@ -19,16 +19,6 @@ def id_is_selected(s: pd.Series, selected_id: str) -> pd.Series:
     return s == selected_id
 
 
-def get_city_tag(city: City) -> str:
-    """Return FincaRaiz-city tag for a city given its DANE code."""
-    return f"city-colombia-{city[:2]}-{city[2:]}"
-
-
-def get_fr_tag(city: City) -> str:
-    """Retrun propietary FincaRaiz tag for a place"""
-    return f"colombia-antioquia-{FR_ALTERNATIVE_CODES[city]}"
-
-
 def get_name(city: City) -> str:
     """Retrun canonical name of the city."""
     return CITIES.at[city, "NOMBRE"]

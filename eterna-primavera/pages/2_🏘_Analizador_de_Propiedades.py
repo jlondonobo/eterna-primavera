@@ -1,7 +1,3 @@
-import subprocess
-import sys
-import time
-
 import language
 import pandas as pd
 import plotly.express as px
@@ -9,6 +5,7 @@ import streamlit as st
 from cities import City
 from loaders.load_cities import load_cities
 from loaders.load_geometries import load_geometries
+from loaders.load_listings import load_listings
 from shapely import wkt
 from transformers.trim_outliers import trim_outliers
 
@@ -17,19 +14,7 @@ st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide
 # Utils run the function load_cities() should fix this issue
 # Meanwhile keep below st.set_page
 from plots import h3_choropleth_from_latlon, plot_donut
-from utils import get_city_tag, get_fr_tag, get_name, import_css
-
-try:
-    from real_estate.finca_raiz import main, search
-except ModuleNotFoundError as e:
-    sleep_time = 30
-    st.markdown(f"Waiting {sleep_time} seconds to install human-real-estate")
-    subprocess.Popen([f"git config --global url.'https://${{token}}:x-oauth-basic@github.com/'.insteadOf 'git@github.com:'"], shell=True)
-    
-    subprocess.Popen([f'{sys.executable} -m pip install real-estate@git+https://jlondonobo:${{token}}@github.com/HumanLD/human-real-estate'], shell=True)
-    time.sleep(30)
-
-from real_estate.finca_raiz import main, search
+from utils import get_name, import_css
 
 
 def parse_prices(df: pd.DataFrame) -> pd.DataFrame:
@@ -43,45 +28,14 @@ def parse_prices(df: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-@st.cache_data
-def fetch_properties(city: City, offers: str, property_type: str) -> pd.DataFrame:
-    city_tags = [get_city_tag(city), get_fr_tag(city)]
-
-    df = sc.search(offer=offers, property_type=property_type, cities=city_tags)
-
-    df["geometry"] = df["locations.location_point"].apply(wkt.loads)
-    df["lat"] = df["geometry"].apply(lambda p: p.y)
-    df["lon"] = df["geometry"].apply(lambda p: p.x)
-    df["lat"] = df["lat"].where(df["lat"].between(4, 11), pd.NA)
-    df["lon"] = df["lon"].where(df["lon"].between(-76, -73), pd.NA)
-    df["area"] = pd.to_numeric(df["area"])
-
-    df = df.pipe(parse_prices)
-    return df
-
-
-@st.cache_data
-def fetch_stat_total_listings(
-    city: City,
-    offer: str,
-    property_type: str,
-) -> int:
-    city_tags = [get_city_tag(city), get_fr_tag(city)]
-
-    return sc.total_listings(
-        offer=offer,
-        property_type=property_type,
-        cities=city_tags,
-    )
-
-
+listings = load_listings()
 geometries = load_geometries()
 cities = load_cities()
 
 
 # Sidebar
 with st.sidebar:
-    valid_offers = [o for o in search.OFFERS if o != "lease"]
+    valid_offers = ["sell", "rent"]
 
     st.markdown("## Selecciona tu opción")
     city = City(
@@ -102,10 +56,6 @@ with st.sidebar:
 
 import_css("eterna-primavera/assets/2_analizador_style.css")
 
-sc = main.FincaRaizClient(20)
-stat_total_listings = fetch_stat_total_listings(city, offer, property_type)
-listings = fetch_properties(city, offer, property_type)
-
 # ------ TITULO
 st.markdown("# Analizador de Propiedades")
 
@@ -116,7 +66,7 @@ with col1:
 with col2:
     st.metric("Área promedio", f"{listings['area'].mean():,.0f}m2")
 with col3:
-    st.metric("Total de propiedades", value=f"{stat_total_listings:,}")
+    st.metric("Total de propiedades", value=f"{len(listings):,}")
 
 # ------ TABS
 tab1, tab2, tab3 = st.tabs(
