@@ -94,6 +94,13 @@ listings = fetch_properties(city, offer, property_type)
 # ------ TITULO
 st.markdown("# Analizador de Propiedades")
 
+with st.expander("Filtros avanzados"):
+    # TODO: Read these from the data
+    rooms = st.multiselect("Cuartos", [1, 2, 3, 4, 5, 6], default=[1, 2, 3, 4, 5, 6])
+    baths = st.multiselect("Baños", [1, 2, 3, 4, 5, 6], default=[1, 2, 3, 4, 5, 6])
+    stratum = st.multiselect("Estrato", ["Estrato 1", 2, 3, 4, 5, 6], default=["Estrato 1", 2, 3, 4, 5, 6])
+
+
 # ------ METRICS
 col1, col2, col3 = st.columns(3)
 with col1:
