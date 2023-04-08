@@ -22,8 +22,10 @@ from utils import get_city_tag, get_fr_tag, get_name, import_css
 try:
     from real_estate.finca_raiz import main, search
 except ModuleNotFoundError as e:
-    subprocess.Popen([f'{sys.executable} -m poetry add git+https://${{token}}@github.com/HumanLD/human-real-estate.git'], shell=True)
-    time.sleep(90)
+    sleep_time = 30
+    st.markdown(f"Waiting {sleep_time} seconds to install human-real-estate")
+    subprocess.Popen([f'{sys.executable} -m pip install git+https://${{token}}@github.com/HumanLD/human-real-estate.git'], shell=True)
+    time.sleep(30)
 
 from real_estate.finca_raiz import main, search
 
