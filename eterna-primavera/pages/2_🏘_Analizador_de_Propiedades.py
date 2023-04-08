@@ -24,12 +24,10 @@ try:
 except ModuleNotFoundError as e:
     sleep_time = 30
     st.markdown(f"Waiting {sleep_time} seconds to install human-real-estate")
-
-
     subprocess.Popen(["git config credential.helper store"], shell=True)
     subprocess.Popen(["git config credential.https://github.com jlondonobo"], shell=True)
-    subprocess.Popen([f"git config global github.user jlondonobo"], shell=True)
-    subprocess.Popen([f"git config global github.token ${{token}}"], shell=True)
+    subprocess.Popen([f"git config --global github.user jlondonobo"], shell=True)
+    subprocess.Popen([f"git config --global github.token ${{token}}"], shell=True)
     
     subprocess.Popen([f'{sys.executable} -m pip install real-estate@git+https://jlondonobo:${{token}}@github.com/HumanLD/human-real-estate'], shell=True)
     time.sleep(30)
