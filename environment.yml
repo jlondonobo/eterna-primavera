@@ -9,10 +9,11 @@
 ###############################################################################
 name: streamlit-env
 dependencies:
-  - python>=3.10,<3.11
-  - pandas<2.0
-  - shapely>=2.0.1,<3.0.0
-  - geopandas>=0.12.2,<0.13.0
+  - python
+  - pandas
+  - shapely
+  - geopandas
+  - pip
   - pip:
       - ipykernel
       - plotly
