@@ -41,7 +41,7 @@ def plot_highlighted_choropleth(
     )
 
     fig.update_layout(
-        mapbox_style=os.environ["MAPBOX_STYLE"],
+        # mapbox_style=os.environ["MAPBOX_STYLE"],
         mapbox_accesstoken=os.environ["MAPBOX_TOKEN"],
         margin=dict(l=0, r=0, t=0, b=0),
         # this option forces zoom to stay the same when data is updated
@@ -85,7 +85,7 @@ def h3_choropleth_from_latlon(
     )
 
     fig.update_layout(
-        mapbox_style=os.environ["MAPBOX_STYLE"],
+        # mapbox_style=os.environ["MAPBOX_STYLE"],
         mapbox_accesstoken=os.environ["MAPBOX_TOKEN"],
         margin=dict(l=0, r=0, t=0, b=0),
         uirevision="Don't change",
