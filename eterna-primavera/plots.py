@@ -1,5 +1,5 @@
 import os
-from typing import Union
+from typing import Literal, Union
 
 import geopandas as gpd
 import pandas as pd
@@ -52,6 +52,7 @@ def plot_highlighted_choropleth(
 
 
 def h3_choropleth_from_latlon(
+    type: Literal["count", "price"],
     data: pd.DataFrame,
     lat: str,
     lon: str,
@@ -61,23 +62,28 @@ def h3_choropleth_from_latlon(
     center: dict = {"lat": 6.240833, "lon": -75.530553},
 ):
     """Return choropleth map of H3 hexagons from lat/lon columns."""
+    value_var = "counter" if type == "count" else "price_m2"
+    agg_fun = {"counter": "count", "price_m2": "mean"}
 
-    hex_count = (
+    hex_statistic = (
         data
-        .assign(h3=lambda df: latlon_to_h3(df, lat, lon, h3_level))
+        .assign(
+            h3=lambda df: latlon_to_h3(df, lat, lon, h3_level),
+            counter=1,
+        )
         .groupby("h3", as_index=False)
-        .size()
+        .agg(agg_fun)
         .assign(h3_geometry=lambda df: ploygons_from_h3(df["h3"]))
         .dropna()
     )
 
-    geojson_obj = gdf_to_json(hex_count, "h3", "h3_geometry", "size")
+    geojson_obj = gdf_to_json(hex_statistic, "h3", "h3_geometry", value_var)
 
     fig = px.choropleth_mapbox(
-        hex_count,
+        hex_statistic,
         geojson=geojson_obj,
         locations="h3",
-        color="size",
+        color=value_var,
         mapbox_style="carto-positron",
         zoom=zoom,
         center=center,

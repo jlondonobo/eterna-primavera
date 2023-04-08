@@ -149,9 +149,18 @@ with tab2:
 
 with tab3:
     st.markdown("## Donde están localizadas?")
-    st.radio("Qúe métrica quieres ver?", ["Conteo de Propiedades", "Precio promedio (m2)"], index=0, horizontal=True)
+    mapper = {
+        "count": "Conteo de Propiedades",
+        "price": "Precio promedio (m2)",
+    }
+    type = st.selectbox(
+        "Qúe métrica quieres ver?",
+        ["count", "price"],
+        index=0,
+        format_func=mapper.get,
+        
+    )
     choropleth = h3_choropleth_from_latlon(
-        listings, "lat", "lon", 9, zoom=11
+        type, listings, "lat", "lon", 9, zoom=11, 
     )
     st.plotly_chart(choropleth, use_container_width=True)
-
