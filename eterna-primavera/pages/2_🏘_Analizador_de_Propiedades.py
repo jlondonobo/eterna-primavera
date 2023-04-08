@@ -27,7 +27,7 @@ except ModuleNotFoundError as e:
 
     subprocess.Popen(['git config credential.helper store'], shell=True)
     subprocess.Popen(['git config --global user.name jlondonobo'], shell=True)
-    subprocess.Popen([f'{sys.executable} -m pip install git+https://jlondonobo:${{token}}@github.com/HumanLD/human-real-estate.git'], shell=True)
+    subprocess.Popen([f'{sys.executable} -m pip install real-estate@git+https://jlondonobo:{{token}}@github.com/HumanLD/human-real-estate'], shell=True)
     time.sleep(30)
 
 from real_estate.finca_raiz import main, search
