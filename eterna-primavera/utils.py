@@ -30,18 +30,19 @@ def get_inhabitants(city: City, year: Literal[2023, 2035]) -> int:
     return CITIES.at[city, column]
 
 
+@st.cache_data
 def filter_listings(
     listings: pd.DataFrame,
     city: City,
     offer: Literal["sell", "rent"],
     property_type: Literal["apartment", "studio", "house", "country-house", "farm"],
-    rooms: list[int],
-    bathrooms: list[int],
+    rooms: list[str],
+    bathrooms: list[str],
     stratum: list[str],
 ) -> pd.DataFrame:
     """Return a filtered dataframe with listings."""
     df = listings[
-        (listings["city"] == city)
+        (listings["city_code"] == city)
         & (listings["offer"] == offer)
         & (listings["property_type"] == property_type)
         & (listings["rooms"].isin(rooms))

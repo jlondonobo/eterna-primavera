@@ -1,20 +1,18 @@
-import language
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 from cities import City
+from constants import EXCHANGE_RATE
 from loaders.load_cities import load_cities
 from loaders.load_geometries import load_geometries
 from loaders.load_listings import load_listings
-from constants import EXCHANGE_RATE
 
 st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
 
 # Utils run the function load_cities() should fix this issue
 # Meanwhile keep below st.set_page
 from plots import h3_choropleth_from_latlon, plot_donut
-from utils import get_name, import_css
-
+from utils import filter_listings, get_name, import_css
 
 listings = load_listings()
 geometries = load_geometries()
@@ -23,8 +21,8 @@ cities = load_cities()
 
 # Sidebar
 with st.sidebar:
-    valid_offers = ["sell", "rent"]
-    valid_properties = ["apartment", "studio", "house", "country-house", "farm"]
+    valid_offers = ["Venta", "Arriendo"]
+    valid_properties = ["Apartamento", "Casa"]
 
     st.markdown("## Selecciona tu opción")
     city = City(
@@ -34,13 +32,11 @@ with st.sidebar:
         "Tipo de propiedad",
         valid_properties,
         index=0,
-        format_func=language.ES["property_type"].get,
     )
     offer = st.selectbox(
         "Tipo de oferta",
         valid_offers,
         index=0,
-        format_func=language.ES["offer"].get,
     )
     currency = st.radio(
         "Moneda",
@@ -56,11 +52,38 @@ def update_currency(df: pd.DataFrame, currency: str) -> pd.DataFrame:
     return df
 
 
+st.markdown("# Analizador de Propiedades")
+with st.expander("Filtros Avanzados"):
+    rooms = st.multiselect(
+        "Habitaciones",
+        ["1", "2", "3", "4", "5+"],
+        ["1", "2", "3", "4", "5+"]
+    )
+    bathrooms = st.multiselect(
+        "Baños",
+        ["1", "2", "3", "4+"],
+        ["1", "2", "3", "4+"]
+    )
+    stratum = st.multiselect(
+        "Estrato",
+        ["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
+        ["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
+    )
+
 listings = update_currency(listings, currency)
+listings = filter_listings(
+    listings,
+    city=city,
+    property_type=property_type,
+    offer=offer,
+    rooms=rooms,
+    bathrooms=bathrooms,
+    stratum=stratum,
+)
+
 import_css("eterna-primavera/assets/2_analizador_style.css")
 
 # ------ TITULO
-st.markdown("# Analizador de Propiedades")
 
 # ------ METRICS
 col1, col2, col3 = st.columns(3)
@@ -77,7 +100,7 @@ tab1, tab2, tab3 = st.tabs(
 )
 with tab1:
     st.markdown(
-        f"## Precios de {language.ES['property_type'][property_type].lower()}s en {get_name(city)}"
+        f"## Precios de {property_type.lower()}s en {get_name(city)}"
     )
 
     def simple_histogram():
@@ -126,9 +149,13 @@ with tab3:
         ["count", "price"],
         index=0,
         format_func=mapper.get,
-        
     )
     choropleth = h3_choropleth_from_latlon(
-        type, listings, "lat", "lon", 9, zoom=11, 
+        type,
+        listings,
+        "lat",
+        "lon",
+        9,
+        zoom=11,
     )
     st.plotly_chart(choropleth, use_container_width=True)

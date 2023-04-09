@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 from shapely import wkt
-
 from transformers.trim_outliers import trim_outliers
 
 COLS_OF_INTERES = [
@@ -19,6 +18,11 @@ COLS_OF_INTERES = [
     "locations.cities",
     "age.name",
     "categories",
+]
+
+TEMP_DISABLED_PROPERTY_TYPES = [
+    "Casa Campestre",
+    "Proyecto",
 ]
 
 
@@ -67,6 +71,31 @@ def group_stratum(s: pd.Series):
     return s.where(~s.isin(others), pd.NA)
 
 
+def drop_poorly_inputed(listings: pd.DataFrame) -> pd.DataFrame:
+    """Drop listings with poorly inputed data."""
+    low_price = (listings["price"] < 30_000_000) & (listings["offer"] == "Venta")
+    large_area = listings["area"] > 500
+
+    return listings[~low_price & ~large_area]
+
+
+def city_to_code(s: pd.Series) -> pd.Series:
+    MAPPER = {
+        "MEDELLÍN": "05001",
+        "ENVIGADO": "05266",
+        "SABANETA": "05631",
+        "BELLO": "05088",
+        "ITAGUÍ": "05360",
+        "LA ESTRELLA": "05380",
+        "COPACABANA": "05212",
+        "CALDAS": "05129",
+        "GIRARDOTA": "05308",
+        "BARBOSA": "05079",
+    }
+    return s.str.upper().map(MAPPER)
+
+
+
 @st.cache_data
 def load_listings():
     """Returns listings data."""
@@ -91,6 +120,10 @@ def load_listings():
             rooms=lambda df: group_if_above(df["rooms.name"], 5, "5+"),
             baths=lambda df: group_if_above(df["baths.name"], 4, "4+"),
             stratum=lambda df: group_stratum(df["stratum.name"]),
+            city=lambda df: flatten_offer(df["locations.cities"]),
+            city_code=lambda df: city_to_code(df["city"]),
         )
+        .query("~property_type.isin(@TEMP_DISABLED_PROPERTY_TYPES)")
+        .pipe(drop_poorly_inputed)
     )
     return listings
