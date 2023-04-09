@@ -111,7 +111,7 @@ tab1, tab2, tab3 = st.tabs(
 with tab1:
     measure = st.radio(
         "Medida",
-        ["Metro cuadrado", "Precio Total"],
+        ["Precio Total", "Metro cuadrado"],
         index=0,
         horizontal=True,
     )
