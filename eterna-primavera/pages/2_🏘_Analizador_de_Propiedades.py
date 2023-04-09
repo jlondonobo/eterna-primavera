@@ -53,6 +53,8 @@ def update_currency(df: pd.DataFrame, currency: str) -> pd.DataFrame:
 
 
 st.markdown("# Analizador de Propiedades")
+st.markdown(f"##### ✨ {property_type}s en {offer} en {get_name(city)} ✨")
+
 with st.expander("Filtros Avanzados"):
     rooms = st.multiselect(
         "Habitaciones",
