@@ -27,33 +27,31 @@ with st.expander("¿Que és Eterna Primavera?"):
 with st.expander("¿Cómo puedo usar Eterna Primavera?"):
     st.markdown(
         """
-        1. En el menú izquierdo, selecciona la opción **🏘 Analizador de Propiedades**.
-        2. Filtra la ciudad, tipo de propiedad y el tipo de oferta que deseas conocer.
-    """
+        <ol>
+        <li> En el menú izquierdo, selecciona la opción <a href='/Analizador_de_Propiedades'>🏘 Analizador de Propiedades</a>.
+        <li>Filtra la ciudad, tipo de propiedad y el tipo de oferta que deseas conocer.
+        </ol>
+    """,
+    unsafe_allow_html=True
     )
 with st.expander("¿Cuál es la oferta de Eterna Primavera?"):
     st.markdown(
         """
-        **Quiero comprar o vender una propiedad**
-        - Conoce el valor exacto del metro cuadrado que otros vendedores están solicitando.
-        - Explora inmuebles con tus mismas características y hazle seguimiento al mercado día a día.
-
-        **Quiero arrendar un inmueble**
-
-        - Explora cuales barrios ofrecen mejores precios para el tipo de alojamiento que estás buscando.
-        - Conoce cuál es el precio justo para tu canon de arrendamiento, según lo que otros propietarios están pagando por inmuebles similares al que buscas.
+        **Tómate 5 minutos para explorar el Analizador de Propiedades y obtén**:
+        
+        ✅ Información puntual para ahorrar $ en tu próxima compra o arriendo de una propiedad en Medellín.
+        
+        ✅ Una mayor capacidad de negociación con imobiliarias, inquilinos y vendedores y compradores.
+        
+        ✅ Gráficos personalizados a la medida de tus necesidades.
         """
     )
 
-with st.expander("¿Qué datos usamos?"):
+with st.expander("¿De qué datos se alimenta Eterna Primavera?"):
     st.markdown(
         """
-        **Propiedades**
-        
-        Proviene de plataformas dedicadas a la intermediación del mercado inmobiliario, especializadas en propiedades de Colombia. Eterna Primavera actualiza sus datos cada día.
+        - **Propiedades**: Creamos un dataset único para la ciudad de Medellín que actualizamos diariamente. Los datos provienen de una búsqueda exhaustiva de plataformas dedicadas a la intermediación del mercado inmobiliario, especializadas en Colombia.
 
-        **Ciudades**
-
-        Proveniente del departamento de estadística colombiano (DANE). Usamos los últimos datos publicados por la entidad para cada rubro.
+        - **Ciudades**: Proveniente del departamento de estadística colombiano (DANE). Usamos los últimos datos publicados por la entidad para cada rubro.
         """
     )

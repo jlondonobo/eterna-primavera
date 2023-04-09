@@ -7,7 +7,7 @@ from loaders.load_cities import load_cities
 from loaders.load_geometries import load_geometries
 from loaders.load_listings import load_listings
 
-st.set_page_config(page_title="Eterna Primavera", page_icon="🏡", layout="wide")
+st.set_page_config(page_title="Analizador de Propiedades", page_icon="🏡", layout="wide")
 
 # Utils run the function load_cities() should fix this issue
 # Meanwhile keep below st.set_page
