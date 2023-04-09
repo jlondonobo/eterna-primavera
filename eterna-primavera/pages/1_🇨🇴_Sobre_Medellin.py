@@ -9,7 +9,7 @@ st.set_page_config(layout="wide")
 # Utils run the function load_cities() should fix this issue
 # Meanwhile keep below st.set_page
 from plots import plot_highlighted_choropleth
-from utils import get_inhabitants, get_name, import_css
+from utils import get_density, get_inhabitants, get_name, get_time_to_center, import_css
 
 geometries = load_geometries()
 cities = load_cities()
@@ -73,7 +73,9 @@ st.info("Toca en el nombre de un municipio para ver su ubicación en el mapa.", 
 st.markdown(
     f"""
     <h4 style="padding-bottom: 0px;">{get_name(City(clicked)) if clicked else "Medellín y sus municipios"}</h4>
-    <p><i>Total de habitantes: {get_inhabitants(City(clicked), YEAR) if clicked else cities["population_2023"].sum():,}<i></p>
+    <p><i>Total de habitantes: {get_inhabitants(City(clicked), YEAR) if clicked else cities["population_2023"].sum():,}</i><br>
+    <i>Densidad: {get_density(City(clicked)) if clicked else get_density(""):,} habitantes/km<sup>2</sup></i><br>
+    <i>Tiempo al centro financiero: {get_time_to_center(City(clicked)) if clicked else get_time_to_center(""):,}min</i></p>
     """,
     unsafe_allow_html=True,
 )
