@@ -116,7 +116,7 @@ with col1:
 with col2:
     st.metric("Área promedio", f"{listings['area'].mean():,.0f}m2")
 with col3:
-    st.metric("Total de propiedades", value=f"{len(listings):,}")
+    st.metric(f"Total de {property_type.lower()}s", value=f"{len(listings):,}")
 
 # ------ TABS
 tab1, tab2, tab3 = st.tabs(
@@ -143,7 +143,7 @@ with tab1:
     def simple_histogram():
         """Plot price histogram"""
         mean_price = listings[column].mean()
-        simple_name = "metro cuadrado" if measure == "Metro cuadrado" else "Propiedad"
+        simple_name = "metro cuadrado" if measure == "Metro cuadrado" else property_type.lower()
 
         histogram = px.histogram(listings, x=column, labels={column: measure})
         histogram.update_layout(bargap=0.05, height=500)
