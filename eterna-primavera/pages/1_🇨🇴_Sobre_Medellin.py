@@ -81,9 +81,10 @@ st.info("Toca en el nombre de un municipio para aprender más detalles sobre él
 st.markdown(
     f"""
     <h4 style="padding-bottom: 0px;">{get_name(City(clicked)) if clicked else "Medellín y sus municipios"}</h4>
-    <ul><li><i>Total de habitantes: {get_inhabitants(City(clicked), YEAR) if clicked else cities["population_2023"].sum():,}
-    <li>Densidad: {get_density(City(clicked)) if clicked else get_density(""):,} habitantes/km<sup>2</sup></i>
-    <li>Tiempo al centro financiero: {get_time_to_center(City(clicked)) if clicked else get_time_to_center(""):,}min</i>
+    <ul>
+    <li><i>Total de habitantes: <b>{get_inhabitants(City(clicked), YEAR) if clicked else cities["population_2023"].sum():,}</b></i>
+    <li><i>Densidad: <b>{get_density(City(clicked)) if clicked else get_density(""):,}</b> habitantes/km<sup>2</sup></i>
+    <li><i>Tiempo al centro financiero: <b>{get_time_to_center(City(clicked)) if clicked else get_time_to_center(""):,} min.</b></i>
     </ul>
     """,
     unsafe_allow_html=True,
