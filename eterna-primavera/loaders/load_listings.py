@@ -30,9 +30,9 @@ def parse_prices(df: pd.DataFrame) -> pd.DataFrame:
     # TODO: This should be part of the data pipeline, not part of the app.
     """Parse prices as numeric and convert to millions."""
     return df.assign(
-        price=lambda df: trim_outliers(pd.to_numeric(df["price"])),
+        price=lambda df: trim_outliers(pd.to_numeric(df["price"]), max=0.98),
         # price_mm=lambda df: df["price"] / 1000000,
-        price_m2=lambda df: trim_outliers(pd.to_numeric(df["price_m2"])),
+        price_m2=lambda df: trim_outliers(pd.to_numeric(df["price_m2"]), max=0.98),
         # price_m2_mm=lambda df: df["price_m2"] / 1000000,
     )
 

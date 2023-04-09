@@ -57,15 +57,9 @@ st.markdown(f"##### ✨ {property_type}s en {offer} en {get_name(city)} ✨")
 
 with st.expander("Filtros Avanzados"):
     rooms = st.multiselect(
-        "Habitaciones",
-        ["1", "2", "3", "4", "5+"],
-        ["1", "2", "3", "4", "5+"]
+        "Habitaciones", ["1", "2", "3", "4", "5+"], ["1", "2", "3", "4", "5+"]
     )
-    bathrooms = st.multiselect(
-        "Baños",
-        ["1", "2", "3", "4+"],
-        ["1", "2", "3", "4+"]
-    )
+    bathrooms = st.multiselect("Baños", ["1", "2", "3", "4+"], ["1", "2", "3", "4+"])
     stratum = st.multiselect(
         "Estrato",
         ["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
@@ -102,17 +96,48 @@ tab1, tab2, tab3 = st.tabs(
     ["Análisis de Precios", "Características de las Propiedades", "Localización"]
 )
 with tab1:
-    st.markdown(
-        f"## Precios de {property_type.lower()}s en {get_name(city)}"
+    measure = st.radio(
+        "Medida",
+        ["Metro cuadrado", "Precio Total"],
+        index=0,
+        horizontal=True,
     )
+
+    st.markdown(
+        f"""
+        <h3 style="padding-bottom: 0px;">Precios de {property_type.lower()}s en {get_name(city)}</h3>
+        <p>{measure} ({currency})</p>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    column = "price_m2" if measure == "Metro cuadrado" else "price"
 
     def simple_histogram():
         """Plot price histogram"""
-        histogram = px.histogram(
-            listings, x="price_m2", labels={"price_m2": f"{currency} por m<sup>2</sup>"}
-        )
+        mean_price = listings[column].mean()
+        simple_name = "metro cuadrado" if measure == "Metro cuadrado" else "Propiedad"
+
+        histogram = px.histogram(listings, x=column, labels={column: measure})
         histogram.update_layout(bargap=0.05, height=500)
-        histogram.update_xaxes(tickformat="$,.2s")
+        histogram.update_xaxes(tickprefix="$")
+        histogram.update_yaxes(title_text="Número de propiedades")
+        histogram.add_vline(
+            mean_price,
+            line_width=3,
+            line_dash="dash",
+            line_color="#EC5A53",
+            annotation=dict(    
+                text=f"Precio promedio {simple_name} ({currency})<br><b>${mean_price:,.0f}<b>",
+                y=1.1,
+                showarrow=False,
+                font=dict(color="white"),
+                align="center",
+                bordercolor="white",
+                borderpad=1,
+                borderwidth=1,
+            ),
+        )
         return histogram
 
     st.plotly_chart(simple_histogram(), use_container_width=True)
