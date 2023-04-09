@@ -9,7 +9,7 @@ st.set_page_config(layout="wide")
 # Utils run the function load_cities() should fix this issue
 # Meanwhile keep below st.set_page
 from plots import plot_highlighted_choropleth
-from utils import get_inhabitants, get_name, import_css
+from utils import get_density, get_inhabitants, get_name, get_time_to_center, import_css
 
 geometries = load_geometries()
 cities = load_cities()
@@ -17,8 +17,16 @@ cities = load_cities()
 YEAR = 2023
 
 
+@st.cache_data
 def get_geometries_with_data():
-    return geometries.merge(cities, left_on="MPIO_CDPMP", right_on="MPIO", how="left")
+    geoms = geometries.merge(cities, left_on="MPIO_CDPMP", right_on="MPIO", how="left")
+    geoms = (
+        geoms
+        .assign(name=lambda df: df["MPIO_CDPMP"].apply(get_name))
+        .assign(density=lambda df: df["MPIO_CDPMP"].apply(get_density))
+        .assign(time_to_center=lambda df: df["MPIO_CDPMP"].apply(get_time_to_center))
+    )
+    return geoms
 
 
 import_css("eterna-primavera/assets/1_sobre_style.css")
@@ -69,18 +77,24 @@ content = f"""
 
 clicked = click_detector(content)
 
-st.info("Toca en el nombre de un municipio para ver su ubicación en el mapa.", icon="💡")
+st.info("Toca en el nombre de un municipio para aprender más detalles sobre él", icon="💡")
 st.markdown(
     f"""
     <h4 style="padding-bottom: 0px;">{get_name(City(clicked)) if clicked else "Medellín y sus municipios"}</h4>
-    <p><i>Total de habitantes: {get_inhabitants(City(clicked), YEAR) if clicked else cities["population_2023"].sum():,}<i></p>
+    <ul><li><i>Total de habitantes: {get_inhabitants(City(clicked), YEAR) if clicked else cities["population_2023"].sum():,}
+    <li>Densidad: {get_density(City(clicked)) if clicked else get_density(""):,} habitantes/km<sup>2</sup></i>
+    <li>Tiempo al centro financiero: {get_time_to_center(City(clicked)) if clicked else get_time_to_center(""):,}min</i>
+    </ul>
     """,
     unsafe_allow_html=True,
 )
 
 
 plot = plot_highlighted_choropleth(
-    get_geometries_with_data(), clicked, "MPIO_CDPMP", hover_data={"population_2023": True}
+    get_geometries_with_data(),
+    clicked,
+    "MPIO_CDPMP",
+    hover_data={"name": True, "population_2023": True, "density": True, "time_to_center": True, "MPIO_CDPMP": False, "is_selected": False},
 )
 st.plotly_chart(plot, use_container_width=True)
 
