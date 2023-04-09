@@ -120,7 +120,7 @@ def plot_donut(s: pd.Series) -> go.Figure:
         ]
     )
     fig.update_layout(
-        margin=dict(l=0, r=0, t=30, b=0),
+        margin=dict(l=0, r=0, t=70, b=0),
         showlegend=False,
         title=dict(
             text=mapper[s.name],
