@@ -74,11 +74,19 @@ def h3_choropleth_from_latlon(
         )
         .groupby("h3", as_index=False)
         .agg(agg_fun)
-        .assign(h3_geometry=lambda df: ploygons_from_h3(df["h3"]))
+        .assign(h3_geometry=lambda df: ploygons_from_h3(df["h3"]).scale(0.85, 0.85))
         .dropna()
     )
 
     geojson_obj = gdf_to_json(hex_statistic, "h3", "h3_geometry", value_var)
+    if type == "count":
+        min = hex_statistic["counter"].quantile(0.1)
+        max = hex_statistic["counter"].quantile(0.99)
+    elif type == "price":
+        min = hex_statistic["price_m2"].quantile(0.1)
+        max = hex_statistic["price_m2"].quantile(0.99)
+        
+    range_color = [min, max]
 
     fig = px.choropleth_mapbox(
         hex_statistic,
@@ -89,15 +97,22 @@ def h3_choropleth_from_latlon(
         zoom=zoom,
         center=center,
         hover_data=hover_data,
+        labels={"price_m2": "Precio m²", "counter": "No. Propiedades"},
+        opacity=0.7,
+        color_continuous_scale="Sunsetdark",
+        range_color=range_color,
     )
 
     fig.update_layout(
-        # mapbox_style=os.environ["MAPBOX_STYLE"],
+        mapbox_style="light",
         mapbox_accesstoken=os.environ["MAPBOX_TOKEN"],
         margin=dict(l=0, r=0, t=0, b=0),
         uirevision="Don't change",
         showlegend=False,
+        height=700,
+        
     )
+    fig.update_traces(marker_line_width=0)
     return fig
 
 

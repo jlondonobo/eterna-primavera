@@ -18,6 +18,19 @@ listings = load_listings()
 geometries = load_geometries()
 cities = load_cities()
 
+CENTERS = {
+    "05001": (6.251265320983825, -75.57696852800319),
+    "05088": (6.33732, -75.55795),
+    "05360": (6.18461, -75.59913),
+    "05266": (6.17591, -75.59174),
+    "05129": (6.09, -75.638),
+    "05631": (6.15153, -75.61657),
+    "05212": (6.357621, -75.505078),
+    "05380": (6.15769, -75.64317),
+    "05308": (6.3792, -75.4453),
+    "05079": (6.439, -75.333),
+}
+
 
 # Sidebar
 with st.sidebar:
@@ -185,5 +198,6 @@ with tab3:
         "lon",
         9,
         zoom=11,
+        center={"lat": CENTERS[city][0], "lon": CENTERS[city][1]}
     )
     st.plotly_chart(choropleth, use_container_width=True)
