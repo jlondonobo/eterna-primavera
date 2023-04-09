@@ -68,27 +68,41 @@ def update_currency(df: pd.DataFrame, currency: str) -> pd.DataFrame:
 st.markdown("# Analizador de Propiedades")
 st.markdown(f"##### ✨ {property_type}s en {offer} en {get_name(city)} ✨")
 
-with st.expander("Filtros Avanzados"):
-    rooms = st.multiselect(
-        "Habitaciones", ["1", "2", "3", "4", "5+"], ["1", "2", "3", "4", "5+"]
-    )
-    bathrooms = st.multiselect("Baños", ["1", "2", "3", "4+"], ["1", "2", "3", "4+"])
-    stratum = st.multiselect(
-        "Estrato",
-        ["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
-        ["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
-    )
-
 listings = update_currency(listings, currency)
 listings = filter_listings(
     listings,
     city=city,
     property_type=property_type,
     offer=offer,
-    rooms=rooms,
-    bathrooms=bathrooms,
-    stratum=stratum,
+    rooms=["1", "2", "3", "4", "5+"],
+    bathrooms=["1", "2", "3", "4+"],
+    stratum=["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
 )
+
+
+with st.expander("Filtros Avanzados"):
+    with st.form("My Form"):
+        rooms = st.multiselect(
+            "Habitaciones", ["1", "2", "3", "4", "5+"], ["1", "2", "3", "4", "5+"]
+        )
+        bathrooms = st.multiselect("Baños", ["1", "2", "3", "4+"], ["1", "2", "3", "4+"])
+        stratum = st.multiselect(
+            "Estrato",
+            ["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
+            ["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
+        )
+        submitted = st.form_submit_button("Filtrar")
+        if submitted:
+            listings = filter_listings(
+                listings,
+                city=city,
+                property_type=property_type,
+                offer=offer,
+                rooms=rooms,
+                bathrooms=bathrooms,
+                stratum=stratum,
+            )
+            
 
 import_css("eterna-primavera/assets/2_analizador_style.css")
 
