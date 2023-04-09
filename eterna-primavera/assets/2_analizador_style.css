@@ -3,9 +3,14 @@ h1 {
     padding: 5px;
 }
 
+h5 {
+    text-align: center;
+    font-style: italic;
+}
+
 /*center metric label*/
 [data-testid="stHorizontalBlock"]{
-    outline: 1px solid black;
+    outline: 1px solid white;
     padding: 20px 50px;
     margin-top: 20px;
     border-radius: 10px;

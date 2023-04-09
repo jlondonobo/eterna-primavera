@@ -97,4 +97,3 @@ plot = plot_highlighted_choropleth(
     hover_data={"name": True, "population_2023": True, "density": True, "time_to_center": True, "MPIO_CDPMP": False, "is_selected": False},
 )
 st.plotly_chart(plot, use_container_width=True)
-
