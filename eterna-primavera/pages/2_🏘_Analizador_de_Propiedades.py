@@ -88,7 +88,8 @@ import_css("eterna-primavera/assets/2_analizador_style.css")
 # ------ METRICS
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric(f"Precio promedio ({currency})", f"${listings['price'].mean():,.0f}")
+    text = "Precio" if offer == "Venta" else "Arriendo"
+    st.metric(f"{text} promedio ({currency})", f"${listings['price'].mean():,.0f}")
 with col2:
     st.metric("Área promedio", f"{listings['area'].mean():,.0f}m2")
 with col3:
