@@ -95,9 +95,9 @@ with tab1:
 with tab2:
     st.markdown("## Cuales son sus características?")
 
-    rooms = listings["rooms.name"].value_counts().sort_index()
-    baths = listings["baths.name"].value_counts().sort_index()
-    stratum = listings["stratum.name"].value_counts().sort_index()
+    rooms = listings["rooms"].value_counts().sort_index()
+    baths = listings["baths"].value_counts().sort_index()
+    stratum = listings["stratum"].value_counts().sort_index()
 
     def get_most_common_config(s: pd.Series) -> str:
         """Return most common type of Room, Bath or Stratum from value counts."""

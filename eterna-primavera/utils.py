@@ -29,3 +29,23 @@ def get_inhabitants(city: City, year: Literal[2023, 2035]) -> int:
     column = "population_2023" if year == 2023 else "population_2035"
     return CITIES.at[city, column]
 
+
+def filter_listings(
+    listings: pd.DataFrame,
+    city: City,
+    offer: Literal["sell", "rent"],
+    property_type: Literal["apartment", "studio", "house", "country-house", "farm"],
+    rooms: list[int],
+    bathrooms: list[int],
+    stratum: list[str],
+) -> pd.DataFrame:
+    """Return a filtered dataframe with listings."""
+    df = listings[
+        (listings["city"] == city)
+        & (listings["offer"] == offer)
+        & (listings["property_type"] == property_type)
+        & (listings["rooms"].isin(rooms))
+        & (listings["baths"].isin(bathrooms))
+        & (listings["stratum"].isin(stratum))
+    ]
+    return df
