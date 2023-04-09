@@ -17,8 +17,16 @@ cities = load_cities()
 YEAR = 2023
 
 
+@st.cache_data
 def get_geometries_with_data():
-    return geometries.merge(cities, left_on="MPIO_CDPMP", right_on="MPIO", how="left")
+    geoms = geometries.merge(cities, left_on="MPIO_CDPMP", right_on="MPIO", how="left")
+    geoms = (
+        geoms
+        .assign(name=lambda df: df["MPIO_CDPMP"].apply(get_name))
+        .assign(density=lambda df: df["MPIO_CDPMP"].apply(get_density))
+        .assign(time_to_center=lambda df: df["MPIO_CDPMP"].apply(get_time_to_center))
+    )
+    return geoms
 
 
 import_css("eterna-primavera/assets/1_sobre_style.css")
@@ -83,7 +91,10 @@ st.markdown(
 
 
 plot = plot_highlighted_choropleth(
-    get_geometries_with_data(), clicked, "MPIO_CDPMP", hover_data={"population_2023": True}
+    get_geometries_with_data(),
+    clicked,
+    "MPIO_CDPMP",
+    hover_data={"name": True, "population_2023": True, "density": True, "time_to_center": True, "MPIO_CDPMP": False, "is_selected": False},
 )
 st.plotly_chart(plot, use_container_width=True)
 

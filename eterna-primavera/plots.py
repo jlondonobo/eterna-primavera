@@ -26,25 +26,27 @@ def plot_highlighted_choropleth(
 ) -> go.Figure:
     """Return choropleth map with highlighted selection."""
     geojson_data = gdf_to_json(geodata, id_col, geometry_col)
-    is_selected = id_is_selected(geodata[id_col], selection)
+    geodata = geodata.assign(
+        is_selected=lambda df: id_is_selected(df[id_col], selection),
+        population_2023=lambda df: df["population_2023"].apply(lambda x: f"{x:,}"),
+    )
 
     fig = px.choropleth_mapbox(
         geodata,
         geojson=geojson_data,
         locations=id_col,
-        color=is_selected,
+        color="is_selected",
         color_discrete_map={True: selected_color, False: default_color},
-        mapbox_style="carto-positron",
+        mapbox_style=None,
         zoom=zoom,
         center=center,
         hover_data=hover_data,
     )
 
     fig.update_layout(
-        # mapbox_style=os.environ["MAPBOX_STYLE"],
+        mapbox_style="light",
         mapbox_accesstoken=os.environ["MAPBOX_TOKEN"],
         margin=dict(l=0, r=0, t=0, b=0),
-        # this option forces zoom to stay the same when data is updated
         uirevision="Don't change",
         showlegend=False,
     )
@@ -66,8 +68,7 @@ def h3_choropleth_from_latlon(
     agg_fun = {"counter": "count", "price_m2": "mean"}
 
     hex_statistic = (
-        data
-        .assign(
+        data.assign(
             h3=lambda df: latlon_to_h3(df, lat, lon, h3_level),
             counter=1,
         )
@@ -87,7 +88,7 @@ def h3_choropleth_from_latlon(
         mapbox_style="carto-positron",
         zoom=zoom,
         center=center,
-        hover_data=hover_data
+        hover_data=hover_data,
     )
 
     fig.update_layout(
@@ -130,4 +131,3 @@ def plot_donut(s: pd.Series) -> go.Figure:
         height=300,
     )
     return fig
-
