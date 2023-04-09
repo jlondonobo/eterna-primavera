@@ -103,9 +103,9 @@ def h3_choropleth_from_latlon(
 def plot_donut(s: pd.Series) -> go.Figure:
     """Return a donut chart from a Series."""
     mapper = {
-        "rooms.name": "No. Habitaciones",
-        "baths.name": "No. Baños",
-        "stratum.name": "Estrato",
+        "rooms": "No. Habitaciones",
+        "baths": "No. Baños",
+        "stratum": "Estrato",
     }
     fig = go.Figure(
         data=[
