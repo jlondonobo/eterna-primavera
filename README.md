@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://blog.pinbus.com/hubfs/joel-duncan-Iqa-WlbNjqs-unsplash.jpg" height="200" alt="Medellín, Ciudad de la Eterna Primavera"
+  <img src="https://user-images.githubusercontent.com/43001823/231056521-0fd37b1e-bb5e-48d6-91f0-263d88373cf9.jpg" width="100%" alt="Medellín, Ciudad de la Eterna Primavera"
   style="border-radius: 30px;"
   ></a>
 
