@@ -16,7 +16,7 @@
 
 ## 📖 Descripción
 
-Este proyecto comenzó como una entreada al [concurso de Streamlit en Español](https://discuss.streamlit.io/t/anunciando-el-concurso-de-streamlit-en-espanol/40274). El objetivo es permitir a todos los interesados en el mercado inmobiliario de Medellín 🇨🇴, poder explorar los datos de manera interactiva y sencilla.
+Este proyecto comenzó como una entreada al [Concurso de Streamlit en Español](https://discuss.streamlit.io/t/anunciando-el-concurso-de-streamlit-en-espanol/40274). El objetivo es permitir a todos los interesados en el mercado inmobiliario de Medellín 🇨🇴, poder explorar los datos de manera interactiva y sencilla.
 
 ## 📊 Datos
 
