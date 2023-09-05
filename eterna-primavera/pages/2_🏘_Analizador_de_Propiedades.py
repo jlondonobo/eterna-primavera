@@ -85,7 +85,9 @@ with st.expander("Filtros Avanzados"):
         rooms = st.multiselect(
             "Habitaciones", ["1", "2", "3", "4", "5+"], ["1", "2", "3", "4", "5+"]
         )
-        bathrooms = st.multiselect("Baños", ["1", "2", "3", "4+"], ["1", "2", "3", "4+"])
+        bathrooms = st.multiselect(
+            "Baños", ["1", "2", "3", "4+"], ["1", "2", "3", "4+"]
+        )
         stratum = st.multiselect(
             "Estrato",
             ["Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6"],
@@ -102,7 +104,7 @@ with st.expander("Filtros Avanzados"):
                 bathrooms=bathrooms,
                 stratum=stratum,
             )
-            
+
 
 import_css("eterna-primavera/assets/2_analizador_style.css")
 
@@ -143,7 +145,9 @@ with tab1:
     def simple_histogram():
         """Plot price histogram"""
         mean_price = listings[column].mean()
-        simple_name = "metro cuadrado" if measure == "Metro cuadrado" else property_type.lower()
+        simple_name = (
+            "metro cuadrado" if measure == "Metro cuadrado" else property_type.lower()
+        )
 
         histogram = px.histogram(listings, x=column, labels={column: measure})
         histogram.update_layout(bargap=0.05, height=500)
@@ -154,7 +158,7 @@ with tab1:
             line_width=3,
             line_dash="dash",
             line_color="#EC5A53",
-            annotation=dict(    
+            annotation=dict(
                 text=f"Precio promedio {simple_name} ({currency})<br><b>${mean_price:,.0f}<b>",
                 y=1.1,
                 showarrow=False,
@@ -173,9 +177,9 @@ with tab1:
 with tab2:
     st.markdown("## Cuales son sus características?")
 
-    rooms = listings["rooms"].value_counts().sort_index()
-    baths = listings["baths"].value_counts().sort_index()
-    stratum = listings["stratum"].value_counts().sort_index()
+    rooms = listings["rooms"].value_counts().sort_index().rename("rooms")
+    baths = listings["baths"].value_counts().sort_index().rename("baths")
+    stratum = listings["stratum"].value_counts().sort_index().rename("stratum")
 
     def get_most_common_config(s: pd.Series) -> str:
         """Return most common type of Room, Bath or Stratum from value counts."""
@@ -212,6 +216,6 @@ with tab3:
         "lon",
         9,
         zoom=11,
-        center={"lat": CENTERS[city][0], "lon": CENTERS[city][1]}
+        center={"lat": CENTERS[city][0], "lon": CENTERS[city][1]},
     )
     st.plotly_chart(choropleth, use_container_width=True)
