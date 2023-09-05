@@ -1,5 +1,5 @@
 --find-links=https://girder.github.io/large_image_wheels GDAL
-streamlit
+streamlit ==1.26.0
 pandas
 shapely
 geopandas

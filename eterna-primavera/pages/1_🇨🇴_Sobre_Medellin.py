@@ -77,7 +77,7 @@ content = f"""
 
 clicked = click_detector(content)
 
-st.info("Toca en el nombre de un municipio para aprender más detalles sobre él", icon="💡")
+st.info("Para conocer más detalles sobre un municipio, haz click sobre su nombre.", icon="💡")
 st.markdown(
     f"""
     <h4 style="padding-bottom: 0px;">{get_name(City(clicked)) if clicked else "Medellín y sus municipios"}</h4>
